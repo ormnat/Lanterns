@@ -3,176 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Four-Digit Code Challenge</title>
+    <title>Enter the Code</title>
     <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        // Custom colors to better match the request description
-                        'input-black': '#1f2937', // A dark gray/near black
-                        'input-green': '#00D100', // Green
-                        'input-yellow': '#F4F00B', // Yellow
-                        'input-purple': '#6A079C', // Purple
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        /* Hide default number input arrows */
-        input[type=number]::-webkit-outer-spin-button,
-        input[type=number]::-webkit-inner-spin-button {
+        /* Use the Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Remove the default number input spinners */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
             margin: 0;
         }
         input[type=number] {
             -moz-appearance: textfield;
         }
-    </style>
-</head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 font-sans">
 
-    <div class="w-full max-w-lg bg-white p-8 rounded-xl shadow-2xl">
-        <h1 class="text-3xl font-extrabold text-gray-800 mb-2 text-center">You Light My World</h1>
-        <p class="text-gray-500 mb-8 text-center">Enter the 4-digit code to find your next clue</p>
-
-        <div id="code-inputs" class="flex justify-center space-x-3 sm:space-x-5 mb-8">
-            <!-- Input 1: Black (Correct digit: 5) --><input type="number" id="code-0" maxlength="1" pattern="\d{1}"
-                   class="code-input text-center w-16 h-16 sm:w-20 sm:h-20 text-3xl font-bold rounded-xl 
-                          bg-input-black text-white focus:ring-4 focus:ring-gray-400 transition" 
-                   value="" autocomplete="off" />
-            
-            <!-- Input 2: Green (Correct digit: 7) --><input type="number" id="code-1" maxlength="1" pattern="\d{1}"
-                   class="code-input text-center w-16 h-16 sm:w-20 sm:h-20 text-3xl font-bold rounded-xl 
-                          bg-input-green text-white focus:ring-4 focus:ring-green-300 transition" 
-                   value="" autocomplete="off" />
-
-            <!-- Input 3: Yellow (Correct digit: 4) --><input type="number" id="code-2" maxlength="1" pattern="\d{1}"
-                   class="code-input text-center w-16 h-16 sm:w-20 sm:h-20 text-3xl font-bold rounded-xl 
-                          bg-input-yellow text-white focus:ring-4 focus:ring-yellow-300 transition" 
-                   value="" autocomplete="off" />
-
-            <!-- Input 4: Purple (Correct digit: 6) --><input type="number" id="code-3" maxlength="1" pattern="\d{1}"
-                   class="code-input text-center w-16 h-16 sm:w-20 sm:h-20 text-3xl font-bold rounded-xl 
-                          bg-input-purple text-white focus:ring-4 focus:ring-purple-300 transition" 
-                   value="" autocomplete="off" />
-        </div>
-
-        <!-- Result Message Area --><div id="result-message" class="text-center p-4 rounded-lg font-semibold min-h-[4rem] flex items-center justify-center flex-col">
-            <!-- Corrected ID to ensure JavaScript can find the element -->
-            <img id="success-image" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAGQAlgDASIAAhEAPwADoAABgAGAAZ+E/wDh7+z/AP8ARd0b/AMl7j/4xQB6wAAAOQAA+YAA4AAAAAGAAAAA2gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH//2Q==" alt="Success Image" class="hidden max-w-full h-auto rounded-lg mb-4" />
-            <!-- Message will appear here --></div>
-        
-        <button id="reset-button" 
-                class="w-full mt-4 py-3 bg-gray-500 text-white rounded-xl hover:bg-gray-600 transition duration-150 shadow-md">
-            Clear Code
-        </button>
-
-    </div>
-
-    <script>
-        const correctCode = ['5', '7', '4', '6'];
-        const inputs = document.querySelectorAll('.code-input');
-        const resultMessage = document.getElementById('result-message');
-        const resetButton = document.getElementById('reset-button');
-        const successImage = document.getElementById('success-image'); // This matches the fixed ID
-        
-        // --- Core Functions ---
-
-        /**
-         * Checks the entered code against the correct code.
-         */
-        function checkCode() {
-            const enteredCode = Array.from(inputs).map(input => input.value);
-            const isCorrect = enteredCode.every((digit, index) => digit === correctCode[index]);
-            
-            // Clear previous styles and hide image
-            resultMessage.className = "text-center p-4 rounded-lg font-semibold min-h-[4rem] flex items-center justify-center flex-col";
-            successImage.classList.add('hidden');
-
-            if (isCorrect) {
-                resultMessage.textContent = "SUCCESS! The code is correct! Access granted.";
-                resultMessage.classList.add('bg-green-100', 'text-green-700', 'border', 'border-green-300', 'shadow-inner');
-                successImage.classList.remove('hidden'); // Show the image
-            } else {
-                resultMessage.textContent = "INCORRECT CODE. Please try again.";
-                resultMessage.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300', 'shadow-inner');
+        /* Shake animation for incorrect code */
+        @keyframes shake {
+            10%, 90% {
+                transform: translateX(-1px);
+            }
+            20%, 80% {
+                transform: translateX(2px);
+            }
+            30%, 50%, 70% {
+                transform: translateX(-4px);
+            }
+            40%, 60% {
+                transform: translateX(4px);
             }
         }
-
-        /**
-         * Clears all input fields and the result message.
-         */
-        function resetCode() {
-            inputs.forEach(input => input.value = '');
-            resultMessage.textContent = ''; 
-            resultMessage.className = "text-center p-4 rounded-lg font-semibold min-h-[4rem] flex items-center justify-center flex-col";
-            successImage.classList.add('hidden'); // Hide the image on reset
-            inputs[0].focus(); // Focus on the first input
+        .animate-shake {
+            animation: shake 0.7s cubic-bezier(.36,.07,.19,.97) both;
         }
+    </style>
+    <!-- Preload the Inter font --><link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+</head>
+<body class="bg-white text-gray-800 min-h-screen flex items-center justify-center p-4">
 
-        // --- Event Handlers ---
+    <main class="w-full max-w-md text-center">
+        
+        <!-- Code Entry Section --><div id="code-entry-container">
+            <h1 class="text-3xl font-bold mb-4">Enter the Code</h1>
+            <p class="text-gray-600 mb-8">Enter the 4-digit combination to proceed.</p>
 
-        inputs.forEach((input, index) => {
-            // 1. Handle Input (Autofocus to next field)
-            input.addEventListener('input', (event) => {
-                // Keep only the first digit entered (to handle copy/paste or rapid entry)
-                if (input.value.length > 1) {
-                    input.value = input.value.charAt(0);
-                }
+            <!-- Input boxes container --><div id="code-inputs" class="flex justify-center space-x-3 sm:space-x-4">
+                <!-- Each input is type="tel" for a better mobile keyboard, but maxLength="1" behaves like text --><!-- The background colors now match the requirements: Black (gray-900), Green, Yellow, Purple --><input type="tel" id="code-1" data-index="1" maxlength="1"
+                       class="code-input w-16 h-20 sm:w-20 sm:h-24 text-4xl font-bold text-center bg-gray-900 border-2 border-gray-900 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                       placeholder="">
+                <input type="tel" id="code-2" data-index="2" maxlength="1"
+                       class="code-input w-16 h-20 sm:w-20 sm:h-24 text-4xl font-bold text-center bg-green-500 border-2 border-green-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                       placeholder="">
+                <input type="tel" id="code-3" data-index="3" maxlength="1"
+                       class="code-input w-16 h-20 sm:w-20 sm:h-24 text-4xl font-bold text-center bg-yellow-500 border-2 border-yellow-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                       placeholder="">
+                <input type="tel" id="code-4" data-index="4" maxlength="1"
+                       class="code-input w-16 h-20 sm:w-20 sm:h-24 text-4xl font-bold text-center bg-purple-500 border-2 border-purple-500 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                       placeholder="">
+            </div>
 
-                // If a digit was entered and it's not the last box, move focus forward
-                if (input.value && index < inputs.length - 1) {
-                    inputs[index + 1].focus();
-                } 
-                
-                // If it is the last box and it's filled, check the code
-                if (index === inputs.length - 1 && input.value) {
-                    input.blur(); // Remove focus after last digit
-                    checkCode();
+            <!-- Error Message --><p id="error-message" class="text-red-500 mt-6 font-semibold hidden">
+                Invalid Code. Please try again.
+            </p>
+        </div>
+
+        <!-- Hidden Image Section --><div id="secret-image-container" class="hidden">
+            <h2 class="text-3xl font-bold mb-6 text-green-600">Access Granted</h2>
+            <img id="secret-image" 
+                 src="uploaded:A Document Forgery.jpg-c452aad7-3ba6-4e7e-9eb6-aaffa2ace4ab" 
+                 alt="A secret revealed"
+                 class="w-full max-w-md rounded-lg shadow-2xl shadow-green-500/20"
+                 onerror="this.alt='Error loading image. The secret is safe.'; this.classList.add('border', 'border-red-500', 'p-4');">
+        </div>
+
+    </main>
+
+    <script>
+        const correctCode = "5746";
+        const codeInputs = document.querySelectorAll('.code-input');
+        const codeContainer = document.getElementById('code-inputs');
+        const errorMessage = document.getElementById('error-message');
+        const codeEntryContainer = document.getElementById('code-entry-container');
+        const secretImageContainer = document.getElementById('secret-image-container');
+
+        // Focus the first input on page load
+        window.addEventListener('load', () => codeInputs[0].focus());
+
+        codeInputs.forEach((input, index) => {
+            // Event listener for when a key is pressed
+            input.addEventListener('keydown', (e) => {
+                // If backspace is pressed and the input is empty, move to the previous input
+                if (e.key === 'Backspace' && input.value === '' && index > 0) {
+                    codeInputs[index - 1].focus();
                 }
             });
 
-            // 2. Handle Keydown (Backspace to previous field)
-            input.addEventListener('keydown', (event) => {
-                // If the user presses backspace (key code 8) or delete (key code 46) 
-                // and the current field is empty or is about to become empty
-                if ((event.key === 'Backspace' || event.key === 'Delete') && index > 0 && input.value.length === 0) {
-                    // Move focus backward
-                    inputs[index - 1].focus();
-                }
-                
-                // Clear any existing result message on new typing
-                if (resultMessage.textContent || !successImage.classList.contains('hidden')) {
-                    resultMessage.textContent = '';
-                    resultMessage.className = "text-center p-4 rounded-lg font-semibold min-h-[4rem] flex items-center justify-center flex-col";
-                    successImage.classList.add('hidden'); // Hide image if typing again
-                }
-                
-            });
+            // Event listener for when a value is input
+            input.addEventListener('input', (e) => {
+                const value = e.target.value;
 
-            // 3. Prevent non-numeric or long inputs
-            input.addEventListener('keypress', (event) => {
-                // Allow only digits (0-9)
-                if (event.key < '0' || event.key > '9' || input.value.length >= 1) {
-                    event.preventDefault();
+                // Only allow numbers
+                if (isNaN(value)) {
+                    input.value = '';
+                    return;
                 }
+                
+                // If a number is entered, move to the next input
+                if (value !== '' && index < codeInputs.length - 1) {
+                    codeInputs[index + 1].focus();
+                }
+
+                // Check the code if all inputs are filled
+                checkCode();
             });
         });
 
-        // Initialize reset button
-        resetButton.addEventListener('click', resetCode);
+        function checkCode() {
+            const enteredCode = Array.from(codeInputs).map(input => input.value).join('');
 
-        // Initial setup
-        window.onload = () => {
-            resetCode();
-        };
+            // If the code is not 4 digits long, do nothing yet
+            if (enteredCode.length < 4) {
+                errorMessage.classList.add('hidden');
+                return;
+            }
 
+            // If the code is 4 digits, check it
+            if (enteredCode === correctCode) {
+                // Correct code
+                codeEntryContainer.classList.add('hidden');
+                secretImageContainer.classList.remove('hidden');
+            } else {
+                // Incorrect code
+                errorMessage.classList.remove('hidden');
+                codeContainer.classList.add('animate-shake');
+
+                // Disable inputs during shake
+                codeInputs.forEach(input => input.disabled = true);
+
+                // After shake, clear inputs, re-enable, and focus the first one
+                setTimeout(() => {
+                    codeContainer.classList.remove('animate-shake');
+                    errorMessage.classList.add('hidden');
+                    codeInputs.forEach(input => {
+                        input.value = '';
+                        input.disabled = false;
+                    });
+                    codeInputs[0].focus();
+                }, 700); // Must match animation duration
+            }
+        }
     </script>
 </body>
 </html>
+
+
