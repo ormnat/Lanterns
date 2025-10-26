@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Four-Digit Code Challenge</title>
+    <!-- Load Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        // Custom colors to better match the request description
+                        'input-black': '#1f2937', // A dark gray/near black
+                        'input-green': '#00D100', // Green
+                        'input-yellow': '#F4F00B', // Yellow
+                        'input-purple': '#6A079C', // Purple
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Hide default number input arrows */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4 font-sans">
+
+    <div class="w-full max-w-lg bg-white p-8 rounded-xl shadow-2xl">
+        <h1 class="text-3xl font-extrabold text-gray-800 mb-2 text-center">You Light My World</h1>
+        <p class="text-gray-500 mb-8 text-center">Enter the 4-digit code to find your next clue</p>
+
+        <div id="code-inputs" class="flex justify-center space-x-3 sm:space-x-5 mb-8">
+            <!-- Input 1: Black (Correct digit: 5) --><input type="number" id="code-0" maxlength="1" pattern="\d{1}"
+                   class="code-input text-center w-16 h-16 sm:w-20 sm:h-20 text-3xl font-bold rounded-xl 
+                          bg-input-black text-white focus:ring-4 focus:ring-gray-400 transition" 
+                   value="" autocomplete="off" />
+            
+            <!-- Input 2: Green (Correct digit: 7) --><input type="number" id="code-1" maxlength="1" pattern="\d{1}"
+                   class="code-input text-center w-16 h-16 sm:w-20 sm:h-20 text-3xl font-bold rounded-xl 
+                          bg-input-green text-white focus:ring-4 focus:ring-green-300 transition" 
+                   value="" autocomplete="off" />
+
+            <!-- Input 3: Yellow (Correct digit: 4) --><input type="number" id="code-2" maxlength="1" pattern="\d{1}"
+                   class="code-input text-center w-16 h-16 sm:w-20 sm:h-20 text-3xl font-bold rounded-xl 
+                          bg-input-yellow text-white focus:ring-4 focus:ring-yellow-300 transition" 
+                   value="" autocomplete="off" />
+
+            <!-- Input 4: Purple (Correct digit: 6) --><input type="number" id="code-3" maxlength="1" pattern="\d{1}"
+                   class="code-input text-center w-16 h-16 sm:w-20 sm:h-20 text-3xl font-bold rounded-xl 
+                          bg-input-purple text-white focus:ring-4 focus:ring-purple-300 transition" 
+                   value="" autocomplete="off" />
+        </div>
+
+        <!-- Result Message Area --><div id="result-message" class="text-center p-4 rounded-lg font-semibold min-h-[4rem] flex items-center justify-center flex-col">
+            <!-- Corrected ID to ensure JavaScript can find the element -->
+            <img id="success-image" src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAGQAlgDASIAAhEAPwADoAABgAGAAZ+E/wDh7+z/AP8ARd0b/AMl7j/4xQB6wAAAOQAA+YAA4AAAAAGAAAAA2gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH//2Q==" alt="Success Image" class="hidden max-w-full h-auto rounded-lg mb-4" />
+            <!-- Message will appear here --></div>
+        
+        <button id="reset-button" 
+                class="w-full mt-4 py-3 bg-gray-500 text-white rounded-xl hover:bg-gray-600 transition duration-150 shadow-md">
+            Clear Code
+        </button>
+
+    </div>
+
+    <script>
+        const correctCode = ['5', '7', '4', '6'];
+        const inputs = document.querySelectorAll('.code-input');
+        const resultMessage = document.getElementById('result-message');
+        const resetButton = document.getElementById('reset-button');
+        const successImage = document.getElementById('success-image'); // This matches the fixed ID
+        
+        // --- Core Functions ---
+
+        /**
+         * Checks the entered code against the correct code.
+         */
+        function checkCode() {
+            const enteredCode = Array.from(inputs).map(input => input.value);
+            const isCorrect = enteredCode.every((digit, index) => digit === correctCode[index]);
+            
+            // Clear previous styles and hide image
+            resultMessage.className = "text-center p-4 rounded-lg font-semibold min-h-[4rem] flex items-center justify-center flex-col";
+            successImage.classList.add('hidden');
+
+            if (isCorrect) {
+                resultMessage.textContent = "SUCCESS! The code is correct! Access granted.";
+                resultMessage.classList.add('bg-green-100', 'text-green-700', 'border', 'border-green-300', 'shadow-inner');
+                successImage.classList.remove('hidden'); // Show the image
+            } else {
+                resultMessage.textContent = "INCORRECT CODE. Please try again.";
+                resultMessage.classList.add('bg-red-100', 'text-red-700', 'border', 'border-red-300', 'shadow-inner');
+            }
+        }
+
+        /**
+         * Clears all input fields and the result message.
+         */
+        function resetCode() {
+            inputs.forEach(input => input.value = '');
+            resultMessage.textContent = ''; 
+            resultMessage.className = "text-center p-4 rounded-lg font-semibold min-h-[4rem] flex items-center justify-center flex-col";
+            successImage.classList.add('hidden'); // Hide the image on reset
+            inputs[0].focus(); // Focus on the first input
+        }
+
+        // --- Event Handlers ---
+
+        inputs.forEach((input, index) => {
+            // 1. Handle Input (Autofocus to next field)
+            input.addEventListener('input', (event) => {
+                // Keep only the first digit entered (to handle copy/paste or rapid entry)
+                if (input.value.length > 1) {
+                    input.value = input.value.charAt(0);
+                }
+
+                // If a digit was entered and it's not the last box, move focus forward
+                if (input.value && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                } 
+                
+                // If it is the last box and it's filled, check the code
+                if (index === inputs.length - 1 && input.value) {
+                    input.blur(); // Remove focus after last digit
+                    checkCode();
+                }
+            });
+
+            // 2. Handle Keydown (Backspace to previous field)
+            input.addEventListener('keydown', (event) => {
+                // If the user presses backspace (key code 8) or delete (key code 46) 
+                // and the current field is empty or is about to become empty
+                if ((event.key === 'Backspace' || event.key === 'Delete') && index > 0 && input.value.length === 0) {
+                    // Move focus backward
+                    inputs[index - 1].focus();
+                }
+                
+                // Clear any existing result message on new typing
+                if (resultMessage.textContent || !successImage.classList.contains('hidden')) {
+                    resultMessage.textContent = '';
+                    resultMessage.className = "text-center p-4 rounded-lg font-semibold min-h-[4rem] flex items-center justify-center flex-col";
+                    successImage.classList.add('hidden'); // Hide image if typing again
+                }
+                
+            });
+
+            // 3. Prevent non-numeric or long inputs
+            input.addEventListener('keypress', (event) => {
+                // Allow only digits (0-9)
+                if (event.key < '0' || event.key > '9' || input.value.length >= 1) {
+                    event.preventDefault();
+                }
+            });
+        });
+
+        // Initialize reset button
+        resetButton.addEventListener('click', resetCode);
+
+        // Initial setup
+        window.onload = () => {
+            resetCode();
+        };
+
+    </script>
+</body>
+</html>
